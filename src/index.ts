@@ -50,6 +50,7 @@ async function main() {
     runner.add(player);
 
     const playerMove = new Move(player);
+    playerMove.setSpeed(2);
     runner.add(playerMove);
 
     const playerEvent = new Event(engine.app);
@@ -83,6 +84,7 @@ async function main() {
             if (counter.isMax()) return;
             counter.increment();
             animalCollision.remove();
+            animalMove.setSpeed(2);
 
             playerGroup.add(
                 (x, y) => animalMove.to(x, y),
@@ -99,7 +101,7 @@ async function main() {
     // Animal Generator
     const animals = new AnimalGenerator();
     animals.init(animal);
-    animals.create(5);
+    animals.create(10);
     animals.createStart(10000, Math.floor(Math.random() * 5) + 1);
 }
 

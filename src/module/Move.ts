@@ -6,6 +6,7 @@ export class Move extends RunnerObject {
     protected toX: number | null = null;
     protected toY: number | null = null;
     protected removed: boolean = false;
+    protected speed: number = 1;
     protected callback: () => void = () => {};
 
     constructor(obj: IGraphics) {
@@ -44,6 +45,10 @@ export class Move extends RunnerObject {
         this.callback = callback;
     };
 
+    setSpeed = (speed: number) => {
+        this.speed = speed;
+    };
+
     remove = () => {
         this.removed = true;
     };
@@ -70,7 +75,10 @@ export class Move extends RunnerObject {
 
         const angle = this.angle(from.x, from.y, this.toX, this.toY);
         this.obj.setRotation(angle + Math.PI / 2);
-        this.obj.setPosition(from.x + velocity.x, from.y + velocity.y);
+        this.obj.setPosition(
+            from.x + velocity.x * this.speed,
+            from.y + velocity.y * this.speed
+        );
 
         return true;
     };

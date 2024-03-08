@@ -38,6 +38,7 @@ export interface IGraphics extends IRunnerObject {
 export interface IMove extends IRunnerObject {
     to: (toX: number, toY: number) => void;
     toRandom: () => void;
+    setSpeed: (speed: number) => void;
     setCallback: (callback: () => void) => void;
 }
 
