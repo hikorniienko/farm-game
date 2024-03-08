@@ -2,15 +2,26 @@ import * as PIXI from "pixi.js";
 import { IEvent } from "../type";
 
 export class Event implements IEvent {
-    private app: PIXI.Application;
+    protected app: PIXI.Application;
+    protected onClickList: ((event: PointerEvent) => void)[] = [];
 
     constructor(app: PIXI.Application) {
         this.app = app;
+        this.app.canvas.addEventListener("pointerdown", this.listenerOnClick);
     }
 
-    onClick = (callback: (event: PointerEvent) => void) => {
-        this.app.canvas.addEventListener("pointerdown", (event: PointerEvent) => {
+    protected listenerOnClick = (event: PointerEvent) => {
+        this.onClickList.forEach((callback) => {
             callback(event);
         });
+    };
+
+    onClick = (callback: (event: PointerEvent) => void) => {
+        this.onClickList.push(callback);
+    };
+
+    remove = () => {
+        this.app.canvas.removeEventListener("pointerdown", this.listenerOnClick);
+        this.onClickList = [];
     };
 }

@@ -2,21 +2,22 @@ import { RunnerObject } from "../core/Runner";
 import { IGraphics } from "../type";
 
 export class Move extends RunnerObject {
-    private obj: IGraphics;
-    private toX: number | null = null;
-    private toY: number | null = null;
-    private callback: () => void = () => {};
+    protected obj: IGraphics;
+    protected toX: number | null = null;
+    protected toY: number | null = null;
+    protected removed: boolean = false;
+    protected callback: () => void = () => {};
 
     constructor(obj: IGraphics) {
         super();
         this.obj = obj;
     }
 
-    private angle = (fromX: number, fromY: number, toX: number, toY: number) => {
+    protected angle = (fromX: number, fromY: number, toX: number, toY: number) => {
         return Math.atan2(toY - fromY, toX - fromX);
     };
 
-    private velocity = (fromX: number, fromY: number, toX: number, toY: number) => {
+    protected velocity = (fromX: number, fromY: number, toX: number, toY: number) => {
         const angle = this.angle(fromX, fromY, toX, toY);
 
         return {
@@ -25,14 +26,14 @@ export class Move extends RunnerObject {
         };
     };
 
-    private distance = (fromX: number, fromY: number, toX: number, toY: number) => {
+    protected distance = (fromX: number, fromY: number, toX: number, toY: number) => {
         return Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2));
     };
 
-    to(toX: number, toY: number) {
+    to = (toX: number, toY: number) => {
         this.toX = toX;
         this.toY = toY;
-    }
+    };
 
     toRandom = () => {
         this.toX = Math.random() * window.innerWidth;
@@ -43,11 +44,16 @@ export class Move extends RunnerObject {
         this.callback = callback;
     };
 
+    remove = () => {
+        this.removed = true;
+    };
+
     isRemoved = () => {
-        return this.obj.isRemoved();
+        return this.obj.isRemoved() || this.removed;
     };
 
     update = () => {
+        if (this.removed) return false;
         if (this.toX === null || this.toY === null) return false;
         if (this.obj.isRemoved()) return false;
 

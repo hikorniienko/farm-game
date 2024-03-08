@@ -11,20 +11,8 @@ export class Runner implements IRunner {
     }
 
     private update = () => {
-        const basket = [];
-
-        for (let i = 0; i < this.objects.length; i++) {
-            if (this.objects[i].isRemoved()) {
-                basket.push(i);
-                continue;
-            }
-
-            this.objects[i].update();
-        }
-
-        for (const index of basket) {
-            this.objects.splice(index, 1);
-        }
+        this.objects = this.objects.filter((object) => !object.isRemoved());
+        this.objects.forEach((object) => object.update());
     };
 
     add = (object: IRunnerObject) => {
